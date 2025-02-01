@@ -2,13 +2,10 @@
 
 module Types
   class MutationType < Types::BaseObject
-    field :create_team, Types::TeamType, null: false do
-      argument :name, String, required: true
-      argument :country, String, required: true
-    end
+    field :create_league, mutation: Mutations::CreateLeague
+    field :update_league, mutation: Mutations::UpdateLeague
+    field :delete_league, mutation: Mutations::DeleteLeague
 
-    def create_team(name:, country:)
-      Team.create!(name: name, country: country)
-    end
+    
   end
 end

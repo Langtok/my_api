@@ -1,53 +1,20 @@
-# # frozen_string_literal: true
+# frozen_string_literal: true
 
-# module Types
-#   class QueryType < Types::BaseObject
-#     field :node, Types::NodeType, null: true, description: "Fetches an object given its ID." do
-#       argument :id, ID, required: true, description: "ID of the object."
-#     end
-
-#     def node(id:)
-#       context.schema.object_from_id(id, context)
-#     end
-
-#     field :nodes, [Types::NodeType, null: true], null: true, description: "Fetches a list of objects given a list of IDs." do
-#       argument :ids, [ID], required: true, description: "IDs of the objects."
-#     end
-
-#     def nodes(ids:)
-#       ids.map { |id| context.schema.object_from_id(id, context) }
-#     end
-
-#     # Add root-level fields here.
-#     # They will be entry points for queries on your schema.
-
-#     # TODO: remove me
-#     field :test_field, String, null: false,
-#       description: "An example field added by the generator"
-#     def test_field
-#       "Hello World!"
-#     end
-#   end
-# end
-
-# app/graphql/types/query_type.rb
 module Types
   class QueryType < Types::BaseObject
-    field :get_team, Types::TeamType, null: true do
-      description "Get a team by ID"
-      argument :id, ID, required: true
+    # Field for fetching leagues
+    field :leagues, [Types::LeagueType], null: false, description: "Fetches a paginated list of leagues." do
+      argument :page, Integer, required: false, description: "The page number for pagination."
+      argument :per_page, Integer, required: false, description: "The number of records per page."
+      argument :country, String, required: false, description: "Filter by country."
     end
 
-    def get_team(id:)
-      Team.find(id)
+    def leagues(page: 1, per_page: 20, country: nil)
+      scope = League.all
+      scope = scope.where(country: country) if country.present?
+      scope.page(page).per(per_page)
     end
 
-    field :list_teams, [Types::TeamType], null: false do
-      description "List all teams"
-    end
-
-    def list_teams
-      Team.all
-    end
+    
   end
 end
