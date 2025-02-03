@@ -10,19 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_27_093518) do
+ActiveRecord::Schema[7.2].define(version: 2025_01_30_113124) do
   # These are extensions that must be enabled in order to support this database
-  enable_extension "pg_catalog.plpgsql"
-
-  create_table "home_teams", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
+  enable_extension "plpgsql"
 
   create_table "leagues", force: :cascade do |t|
     t.string "name"
     t.string "country"
     t.string "season"
+    t.integer "founded"
+    t.string "division"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -30,7 +27,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_27_093518) do
   create_table "matches", force: :cascade do |t|
     t.bigint "home_team_id", null: false
     t.bigint "away_team_id", null: false
-    t.string "score"
+    t.integer "score_home"
+    t.integer "score_away"
     t.datetime "match_date"
     t.bigint "league_id", null: false
     t.datetime "created_at", null: false
@@ -38,20 +36,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_27_093518) do
     t.index ["away_team_id"], name: "index_matches_on_away_team_id"
     t.index ["home_team_id"], name: "index_matches_on_home_team_id"
     t.index ["league_id"], name: "index_matches_on_league_id"
-  end
-
-  create_table "oauth_access_grants", force: :cascade do |t|
-    t.bigint "resource_owner_id", null: false
-    t.bigint "application_id", null: false
-    t.string "token", null: false
-    t.integer "expires_in", null: false
-    t.text "redirect_uri", null: false
-    t.string "scopes", default: "", null: false
-    t.datetime "created_at", null: false
-    t.datetime "revoked_at"
-    t.index ["application_id"], name: "index_oauth_access_grants_on_application_id"
-    t.index ["resource_owner_id"], name: "index_oauth_access_grants_on_resource_owner_id"
-    t.index ["token"], name: "index_oauth_access_grants_on_token", unique: true
   end
 
   create_table "oauth_access_tokens", force: :cascade do |t|
@@ -74,7 +58,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_27_093518) do
     t.string "name", null: false
     t.string "uid", null: false
     t.string "secret", null: false
-    t.text "redirect_uri", null: false
+    t.text "redirect_uri"
     t.string "scopes", default: "", null: false
     t.boolean "confidential", default: true, null: false
     t.datetime "created_at", null: false
@@ -86,6 +70,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_27_093518) do
     t.string "name"
     t.bigint "team_id", null: false
     t.string "position"
+    t.integer "age"
+    t.string "nationality"
+    t.float "height"
+    t.float "weight"
+    t.datetime "birth_date"
     t.integer "goals"
     t.integer "matches_played"
     t.datetime "created_at", null: false
@@ -95,6 +84,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_27_093518) do
 
   create_table "teams", force: :cascade do |t|
     t.string "name"
+    t.string "stadium"
+    t.string "city"
     t.integer "founded"
     t.bigint "league_id", null: false
     t.datetime "created_at", null: false
@@ -110,6 +101,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_27_093518) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "role", default: 0
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
@@ -117,7 +109,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_27_093518) do
   add_foreign_key "matches", "leagues"
   add_foreign_key "matches", "teams", column: "away_team_id"
   add_foreign_key "matches", "teams", column: "home_team_id"
-  add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
   add_foreign_key "players", "teams"
   add_foreign_key "teams", "leagues"
