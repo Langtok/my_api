@@ -254,7 +254,7 @@ rails c
 ### Accessing the Hosted version (Postman)
 You can access the hosted version of the API via the following link as seen in the postman documentation using all the corresponding enpoints 
     ```bash
-    https://my-api-uo7r.onrender.com
+    https://my-api-zssd.onrender.com
     ```
 
 ### GraphQL Interface
@@ -367,7 +367,7 @@ You can access the hosted version of the API via the following link as seen in t
 ### Postman Documentation Link
 The following link to access the postman documentation
     ```
-        https://documenter.getpostman.com/view/38229624/2sAXxQdryu
+        https://documenter.getpostman.com/view/41622568/2sAYX5K2qd
     ```
 ### The Core Team
 Matthew Prince Emmanuel
